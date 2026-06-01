@@ -16,6 +16,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText edtFullName, edtChronic, edtMedicine, edtAllergy;
     private TextView txtBloodGroup, btnSaveProfile;
     private LinearLayout bloodGroupBox;
+    private boolean isProfileAlreadySaved = false;
 
     private final String[] bloodGroups = {
             "A Rh+", "A Rh-", "B Rh+", "B Rh-",
@@ -37,11 +38,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Load saved profile
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        edtFullName.setText(prefs.getString("profile_name", ""));
+        String savedName = prefs.getString("profile_name", "");
+        edtFullName.setText(savedName);
         edtChronic.setText(prefs.getString("profile_chronic", ""));
         edtMedicine.setText(prefs.getString("profile_medicine", ""));
         edtAllergy.setText(prefs.getString("profile_allergy", ""));
         txtBloodGroup.setText(prefs.getString("profile_blood", ""));
+
+        // Profil daha önce kaydedilmişse kontrol et
+        isProfileAlreadySaved = prefs.getBoolean("profile_saved", false);
 
         bloodGroupBox.setOnClickListener(v -> showBloodGroupDialog());
 
@@ -64,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
             .putString("profile_medicine", edtMedicine.getText().toString().trim())
             .putString("profile_allergy", edtAllergy.getText().toString().trim())
             .putString("profile_blood", txtBloodGroup.getText().toString().trim())
+            .putBoolean("profile_saved", true)
             .apply();
     }
 

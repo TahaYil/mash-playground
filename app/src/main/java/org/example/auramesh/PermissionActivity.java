@@ -2,6 +2,7 @@ package org.example.auramesh;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class PermissionActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "AuraMeshPrefs";
     private LinearLayout itemLocation, itemNotification, itemBattery, itemAll;
     private TextView btnCancel, btnContinue;
 
@@ -113,10 +115,15 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
     private void proceedToProfile() {
+        // İzinleri SharedPreferences'e kaydet
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().putBoolean("permissions_granted", true).apply();
+
         // Mesh servislerini başlat
         ((AuraMeshApplication) getApplication()).startMeshServices();
         Intent intent = new Intent(PermissionActivity.this, ProfileActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void setupPermissionItem(LinearLayout item, String title, String description) {
